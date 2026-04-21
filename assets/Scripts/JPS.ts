@@ -75,8 +75,9 @@ export class JPS extends Component {
             // 沿着特定方向发起跳跃
             const jumpPoint: IPos = this.jump(current.pos.x, current.pos.y, dx, dy, end);
             if (!jumpPoint) continue;
-
+            //UI显示跳跃点
             MapEditor.instance.SetJumpNodeVisual(jumpPoint);
+            
             const jx = jumpPoint.x;
             const jy = jumpPoint.y;
             const jKey = this.posKey(jumpPoint);
