@@ -1,0 +1,55 @@
+
+AirConditioner_1.png
+size: 178,332
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: false
+  xy: 2, 138
+  size: 174, 192
+  orig: 192, 232
+  offset: 11, 21
+  index: -1
+lengqiji
+  rotate: true
+  xy: 2, 45
+  size: 91, 94
+  orig: 93, 96
+  offset: 1, 1
+  index: -1
+雪花1
+  rotate: false
+  xy: 142, 45
+  size: 27, 29
+  orig: 29, 31
+  offset: 1, 1
+  index: -1
+雪花2
+  rotate: false
+  xy: 142, 3
+  size: 16, 17
+  orig: 18, 19
+  offset: 1, 1
+  index: -1
+雪花4
+  rotate: false
+  xy: 142, 3
+  size: 16, 17
+  orig: 18, 19
+  offset: 1, 1
+  index: -1
+雪花3
+  rotate: false
+  xy: 142, 22
+  size: 19, 21
+  orig: 21, 23
+  offset: 1, 1
+  index: -1
+风
+  rotate: false
+  xy: 2, 2
+  size: 138, 41
+  orig: 152, 46
+  offset: 6, 3
+  index: -1

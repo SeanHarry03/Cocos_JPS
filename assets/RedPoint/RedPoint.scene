@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Scene",
-    "_name": "Main",
+    "_name": "scene-2d",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -25,7 +25,7 @@
     "_globals": {
       "__id__": 8
     },
-    "_id": "b0235593-cb42-42e4-83be-92ebd1f2eaee"
+    "_id": "c77ecaa8-c936-46c4-a5b0-98692673ed87"
   },
   {
     "__type__": "cc.Node",
@@ -99,7 +99,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
-      "z": 1000
+      "z": 0
     },
     "_lrot": {
       "__type__": "cc.Quat",
@@ -136,7 +136,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 320,
+    "_orthoHeight": 393.04773561811504,
     "_near": 0,
     "_far": 2000,
     "_color": {
