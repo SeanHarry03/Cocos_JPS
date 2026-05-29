@@ -16,7 +16,9 @@ export enum RedPointConst {
     /**任务 */
     task = "Main.Task",
     /**工会 */
-    alliance = "Main.Alliance"
+    alliance = "Main.Alliance",
+    /**工会奖励按钮(测试) */
+    mailAllianceAward = 'Main.Mail.Alliance.Award',
 }
 
 

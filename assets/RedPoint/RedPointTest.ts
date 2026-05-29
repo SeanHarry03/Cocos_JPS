@@ -19,6 +19,12 @@ export class RedPointTest extends Component {
         DorTest.setPosition(Vec3.ZERO)
         this.MailContent = DorTest.getChildByPath("MailContent/ScrollView/view/content")
 
+        let node = DorTest.getChildByPath("MailContent/工会奖励")
+        node.on(Node.EventType.TOUCH_START, () => {
+            RedPointSystem.AddValue(RedPointConst.mailAllianceAward, -1);
+            // node.active = false;
+        })
+
     }
 
     protected start(): void {
@@ -33,14 +39,13 @@ export class RedPointTest extends Component {
         RedPointSystem.SetValue(RedPointConst.alliance, 0)
         RedPointSystem.SetValue(RedPointConst.mailTeam, 0)
         RedPointSystem.SetValue(RedPointConst.mailSystem, this.MailContent.children.length)
-        RedPointSystem.SetValue(RedPointConst.mailAlliance, 5)
+        RedPointSystem.SetValue(RedPointConst.mailAllianceAward, 3)
     }
 
     public AddValue() {
         RedPointSystem.AddValue(RedPointConst.task, 1)
         RedPointSystem.AddValue(RedPointConst.alliance, 1)
         RedPointSystem.AddValue(RedPointConst.mailTeam, 1)
-        RedPointSystem.AddValue(RedPointConst.mailAlliance, 1)
     }
 }
 

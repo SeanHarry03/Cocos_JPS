@@ -1,0 +1,3 @@
+
+RedPointConst 枚举里面添加想要的类型
+RedPointSystem.RedPointTreeList 添加当前的树结构。

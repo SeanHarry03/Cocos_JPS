@@ -14,6 +14,7 @@ export class RedPointSystem {
         RedPointConst.mailSystem,
         RedPointConst.mailTeam,
         RedPointConst.mailAlliance,
+        RedPointConst.mailAllianceAward,
         RedPointConst.task,
         RedPointConst.alliance,
     ];
