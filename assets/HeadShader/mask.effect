@@ -1,0 +1,127 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        maskTexture:    { value: grey }
+        overlayTexture: { value: white }
+        scale:          { value: [1.0, 1.0] }
+        radius:         { value: 0.45 }
+        feather:        { value: 0.02 }
+        center:         { value: [0.5, 0.5] }
+        coverScale:     { value: [1.0, 1.0] }
+        useFrameOverlay: { value: 0.0 }
+        showOverlay:     { value: 0.0 }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <cc-global>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+    pos = cc_matViewProj * pos;
+    uv0 = a_texCoord;
+    color = a_color;
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <embedded-alpha>
+  #include <alpha-test>
+
+  in vec4 color;
+  in vec2 uv0;
+
+  #if USE_TEXTURE
+    #pragma builtin(local)
+    layout(set = 2, binding = 11) uniform sampler2D cc_spriteTexture;
+    uniform sampler2D maskTexture;
+    uniform sampler2D overlayTexture;
+    
+    uniform Constant {
+      vec2 scale;
+      float radius;
+      float feather;
+      vec2 center;
+      vec2 coverScale;
+      float useFrameOverlay;
+      float showOverlay;
+    };
+  #endif
+
+  vec4 frag () {
+    vec4 o = vec4(1.0);
+    vec4 maskColor = vec4(1.0);
+
+    #if USE_TEXTURE
+      // Cover/center-crop: remap UV from center so image fills the sprite area
+      vec2 coveredUV = center + (uv0 - center) * coverScale;
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, coveredUV);
+      
+      #if IS_GRAY
+        float gray = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
+        o.rgb = vec3(gray);
+      #endif
+      
+      maskColor = CCSampleWithAlphaSeparated(maskTexture, coveredUV);
+      
+      vec2 offset = uv0 - center;
+      vec2 scaledOffset = offset * scale;
+      float dist = length(scaledOffset);
+      float circleAlpha = 1.0 - smoothstep(radius - feather, radius + feather, dist);
+
+      o *= color;
+
+      float fFlag = step(0.5, useFrameOverlay);
+      float dFlag = step(0.5, showOverlay) * fFlag;
+
+      // Path A: avatar over frame (useFrameOverlay)
+      float avatarA = o.a * circleAlpha;
+      float fOutA = avatarA + maskColor.a * (1.0 - avatarA);
+      vec3 fOutRGB = (o.rgb * avatarA + maskColor.rgb * maskColor.a * (1.0 - avatarA)) / max(fOutA, 0.001);
+
+      // Path B: original circle mask
+      float mOutA = o.a * maskColor.a * circleAlpha;
+
+      // Select path
+      float finalA = mix(mOutA, fOutA, fFlag);
+      vec3 finalRGB = mix(o.rgb, fOutRGB, fFlag);
+
+      // Die/Escape overlay on top
+      vec4 ov = CCSampleWithAlphaSeparated(overlayTexture, uv0);
+      float dOutA = ov.a + finalA * (1.0 - ov.a);
+      vec3 dOutRGB = (ov.rgb * ov.a + finalRGB * finalA * (1.0 - ov.a)) / max(dOutA, 0.001);
+
+      finalRGB = mix(finalRGB, dOutRGB, dFlag);
+      finalA = mix(finalA, dOutA, dFlag);
+
+      o = vec4(finalRGB, finalA);
+    #endif
+
+    ALPHA_TEST(o);
+    return o;
+  }
+}%
